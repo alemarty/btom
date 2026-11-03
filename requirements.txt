@@ -1,7 +1,7 @@
 # Data Analysis & Manipulation
 pandas
 numpy
-
+pathlib
 
 # Data Visualization & Graphs
 matplotlib

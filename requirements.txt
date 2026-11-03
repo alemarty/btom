@@ -1,0 +1,12 @@
+# Data Analysis & Manipulation
+pandas
+numpy
+
+
+# Data Visualization & Graphs
+matplotlib
+seaborn
+
+# Regressions & Statistical Modeling
+statsmodels
+scikit-learn

@@ -45,8 +45,8 @@ tradeROW_UK = DATAPATH / "working_data_noEU_origin.dta"
 # 3. Read the Stata file directly without manual conversion
 df_EU= pd.read_stata(tradeEU_UK) 
 df_ROW_UK= pd.read_stata(tradeROW_UK) 
-variable_labels_eu = StataReader('tradeEU_UK.dta').variable_labels()
-variable_labels_row = StataReader('working_data_noEU_origin.dta').variable_labels()
+variable_labels_eu = StataReader('tradeEU_UK').variable_labels()
+variable_labels_row = StataReader('tradeROW_UK').variable_labels()
 
 #merge EU+row
 df_EU = pd.concat([df_EU, df_ROW_UK], ignore_index=True)

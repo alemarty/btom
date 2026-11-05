@@ -64,9 +64,23 @@ df_EU= df_EU[(df_EU['unit_price']>df_EU['p1']) &  (df_EU['unit_price']<df_EU['p9
  
 #create summary statistics 
 
-df_EU = df_EU[['COMCODE', 'mode_ind_risk', 'mode_ind_risk_nona', 'monthac', 'month', 'unit_value', 'year', 'DISPATCH', 'ORIGIN', 'VALUE_GBP', 'QUANTITY_KG', 'EU_OR', 'EU_disp', 'FRAMEWORK', 'risk_eu', 'ind_norisk', 'ANIMAL_2digit', 'ANIMAL_4digit']]
+df_EU = df_EU[['COMCODE', 'mode_ind_risk', 'mode_ind_risk_nona', 'monthac', 'month', 'unit_price', 'year', 'DISPATCH', 'ORIGIN', 'VALUE_GBP', 'QUANTITY_KG', 'EU_OR', 'EU_disp', 'FRAMEWORK', 'risk_eu', 'ind_norisk', 'ANIMAL_2digit', 'ANIMAL_4digit']]
 
 print(variable_labels_eu)
 
-df_EU = df_EU.groupby('year')[['VALUE_GBP', 'QUANTITY_KG', 'unit_vale']].mean().reset_index()
 
+# 1. Get raw counts including missing values
+counts = df_EU['mode_ind_risk_nona'].value_counts(dropna=False)
+# 2. Get percentages including missing values
+percentages = df_EU['mode_ind_risk_nona'].value_counts(dropna=False, normalize=True) * 100
+# 3. Combine into a clean table
+stata_tab = pd.DataFrame({'Freq.': counts, 'Percent': percentages})
+print(stata_tab)
+
+summary_df = df_EU.groupby('year', 'COMCODE', 'ORIGIN', 'month', 'ANIMAL_4digit' ).agg({
+    'unit_price': 'mean',          # Average of x
+    'VALUE_GBP': 'mean',          # Average of y
+    'QUANTITY_KG': 'mean',          # Average of z
+    'mode_ind_risk': 'max',  # Maximum of another variable
+    'other_var2': lambda x: x.mode()[0] if not x.mode().empty else None  # Mode of another variable
+}).reset_index()

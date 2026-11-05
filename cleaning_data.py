@@ -3,12 +3,9 @@
 #Purpose: clean data from Stata, generate trade statistics and graphs, run innitial regressions, export. 
 #Date created: Nov 3 2026
 #Last modified: Nov 4 2026
-
-
 #----------------------------------------------------------------------------#
 # Environment and cleanning
 #----------------------------------------------------------------------------#
-
 ##python script 
 #first run environment: .venv\Scripts\Activate.ps1
 # Clear all user-defined variables in the current global scope
@@ -29,12 +26,9 @@ print("uploading packages")
 import sys
 import gc
 
-
-
 #----------------------------------------------------------------------------#
 # Uploading the data and path setting
 #----------------------------------------------------------------------------#
-
 
 WORKPATH = Path(r"C:\Users\Alejandra\Dropbox\Trade_regulation_Project2025")
 DATAPATH = Path(r"C:\Users\Alejandra\Dropbox\Trade_regulation_Project2025\data_clean\working")
@@ -45,8 +39,8 @@ tradeROW_UK = DATAPATH / "working_data_noEU_origin.dta"
 # 3. Read the Stata file directly without manual conversion
 df_EU= pd.read_stata(tradeEU_UK) 
 df_ROW_UK= pd.read_stata(tradeROW_UK) 
-variable_labels_eu = StataReader('tradeEU_UK').variable_labels()
-variable_labels_row = StataReader('tradeROW_UK').variable_labels()
+variable_labels_eu = StataReader(tradeEU_UK).variable_labels()
+variable_labels_row = StataReader(tradeROW_UK).variable_labels()
 
 #merge EU+row
 df_EU = pd.concat([df_EU, df_ROW_UK], ignore_index=True)
@@ -70,6 +64,9 @@ df_EU= df_EU[(df_EU['unit_price']>df_EU['p1']) &  (df_EU['unit_price']<df_EU['p9
  
 #create summary statistics 
 
-df_EU = df_EU[['COMCODE', 'mode_ind_risk', 'mode_ind_risk_nona', 'monthac', 'month', 'year', 'DISPATCH', 'ORIGIN', 'VALUE_GBP', 'QUANTITY_KG', 'EU_OR', 'EU_disp', 'FRAMEWORK', 'risk_eu', 'ind_norisk', 'ANIMAL_2digit', 'ANIMAL_4digit']]
+df_EU = df_EU[['COMCODE', 'mode_ind_risk', 'mode_ind_risk_nona', 'monthac', 'month', 'unit_value', 'year', 'DISPATCH', 'ORIGIN', 'VALUE_GBP', 'QUANTITY_KG', 'EU_OR', 'EU_disp', 'FRAMEWORK', 'risk_eu', 'ind_norisk', 'ANIMAL_2digit', 'ANIMAL_4digit']]
 
 print(variable_labels_eu)
+
+df_EU = df_EU.groupby('year')[['VALUE_GBP', 'QUANTITY_KG', 'unit_vale']].mean().reset_index()
+
